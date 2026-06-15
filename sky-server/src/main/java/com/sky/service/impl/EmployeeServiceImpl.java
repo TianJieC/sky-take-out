@@ -1,7 +1,11 @@
 package com.sky.service.impl;
 
+import com.sky.constant.BCryptConstant;
 import com.sky.constant.MessageConstant;
+import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
@@ -9,10 +13,15 @@ import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
 import com.sky.service.EmployeeService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -57,10 +66,43 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee;
     }
 
+    /**
+     * 新增员工
+     * @param employeeDTO
+     */
+    @Override
+    public void save(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+
+        //拷贝属性
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        //设置账号状态.，默认正常状态：1-正常 0-锁定
+        employee.setStatus(StatusConstant.ENABLE);
+
+        //设置默认密码123456
+        employee.setPassword(getEncodePassword(PasswordConstant.DEFAULT_PASSWORD));
+
+        //设置记录当前的记录时间和修改时间
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+
+        //设置当前记录创建人id和修改人id
+        employee.setCreateUser(BaseContext.getCurrentId());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+
+        employeeMapper.insert(employee);
+    }
+
 
     /**
      * ==================== ====================
      * ==================== ====================
      */
+
+    private String getEncodePassword(String rawPassword){
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(BCryptConstant.PASSWORD_STRENGTH);
+        return passwordEncoder.encode(rawPassword);
+    }
 
 }

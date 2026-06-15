@@ -40,13 +40,6 @@
                 <version>${mybatis.spring}</version>
             </dependency>
 
-            <!-- Spring Security Bcrypt -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-security</artifactId>
-                <version>${spring.bcrypt}</version>
-            </dependency>
-
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
