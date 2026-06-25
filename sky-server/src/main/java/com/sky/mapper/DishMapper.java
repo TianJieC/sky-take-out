@@ -10,6 +10,9 @@ import com.sky.vo.DishVO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+
+import java.util.List;
 
 @Mapper
 public interface DishMapper {
@@ -50,4 +53,25 @@ public interface DishMapper {
      */
     @Delete("delete from dish where id = #{id}")
     void deleteById(Long id);
+
+    /**
+     * 根据菜品id集合批量删除菜品
+     * @param ids
+     */
+    void deleteByIds(List<Long> ids);
+
+    /**
+     * 动态修改菜品数据
+     * @param dish
+     */
+    @AutoFill(value = OperationType.UPDATE)
+    void update(Dish dish);
+
+    /**
+     * 修改菜品状态
+     * @param status
+     * @param id
+     */
+    @Update("update dish set status = #{status} where id = #{id}")
+    void updateStatus(String status, Long id);
 }
