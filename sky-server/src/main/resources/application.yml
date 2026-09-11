@@ -36,9 +36,15 @@ sky:
   jwt:
     # 设置jwt签名加密时使用的秘钥
     admin-secret-key: itcast
-    # 设置jwt过期时间 7200000
+    # TODO 设置jwt过期时间 7200000
     admin-ttl: 720000000
     # 设置前端传递过来的令牌名称
     admin-token-name: token
+    user-secret-key: itheima
+    user-ttl: 720000000
+    user-token-name: authentication
   upload:
     local-path: C:/Java Code/sky-take-out/upload/
+  wechat:
+    appid: ${sky.wechat.appid}
+    secret: ${sky.wechat.secret}
